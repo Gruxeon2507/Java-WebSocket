@@ -5,22 +5,30 @@
 </head>
 <body>
     <div id="messages"></div>
+    <ul>
+        <li><button onclick="changeId(1)">room1</button></li>
+        <li><button onclick="changeId(2)">room2</button></li>
+    </ul>
     <form onsubmit="sendMessage(); return false;">
         <input type="text" id="messageInput">
         <button type="submit">Send</button>
     </form>
     
     <script>
-        const socket = new WebSocket('ws://localhost:9999/DemoTestSocket/chat'+"/abcd");
-        console.log(socket)
-
-        socket.addEventListener('message', (event) => {
+        let roomid=1;
+        let socket = new WebSocket('ws://localhost:9999/DemoTestSocket/chat/'+roomid);
+        function changeId(id){
+            socket.close();
+            roomid = id;
+            socket = new WebSocket('ws://localhost:9999/DemoTestSocket/chat/'+roomid);
+            console.log(socket);
+            socket.addEventListener('message', (event) => {
             const message = event.data;
             const messageElement = document.createElement('div');
             messageElement.textContent = message;
             document.querySelector('#messages').appendChild(messageElement);
         });
-
+        }
         function sendMessage() {
             const messageInput = document.querySelector('#messageInput');
             const message = messageInput.value;
