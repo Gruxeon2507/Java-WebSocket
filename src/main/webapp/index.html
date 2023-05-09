@@ -15,8 +15,21 @@
     </form>
     
     <script>
-        let roomid=1;
-        let socket = new WebSocket('ws://localhost:9999/DemoTestSocket/chat/'+roomid);
+        let roomid;
+        let socket;
+        if(!roomid){
+            roomid=1;
+            socket = new WebSocket('ws://localhost:9999/DemoTestSocket/chat/'+roomid);
+            console.log(socket);
+            socket.addEventListener('message', (event) => {
+            const message = event.data;
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            document.querySelector('#messages').appendChild(messageElement);
+        });
+            
+        }
+       
         function changeId(id){
             socket.close();
             roomid = id;
